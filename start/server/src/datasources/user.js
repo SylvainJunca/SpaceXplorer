@@ -22,6 +22,11 @@ class UserAPI extends DataSource {
    * have to be. If the user is already on the context, it will use that user
    * instead
    */
+
+   /*
+   findOrCreateUser({ email }): Finds or creates a user with a given email in the database
+
+   */
   async findOrCreateUser({ email: emailArg } = {}) {
     const email =
       this.context && this.context.user ? this.context.user.email : emailArg;
@@ -30,7 +35,10 @@ class UserAPI extends DataSource {
     const users = await this.store.users.findOrCreate({ where: { email } });
     return users && users[0] ? users[0] : null;
   }
+   /*
+   bookTrips({ launchIds }): Takes an object with an array of launchIds and books them for the logged in user
 
+   */
   async bookTrips({ launchIds }) {
     const userId = this.context.user.id;
     if (!userId) return;
@@ -46,7 +54,10 @@ class UserAPI extends DataSource {
 
     return results;
   }
+   /*
+   cancelTrip({ launchId }): Takes an object with a launchId and cancels that launch for the logged in user
 
+   */
   async bookTrip({ launchId }) {
     const userId = this.context.user.id;
     const res = await this.store.trips.findOrCreate({
@@ -54,12 +65,18 @@ class UserAPI extends DataSource {
     });
     return res && res.length ? res[0].get() : false;
   }
+   /*
+   
 
+   */
   async cancelTrip({ launchId }) {
     const userId = this.context.user.id;
     return !!this.store.trips.destroy({ where: { userId, launchId } });
   }
+   /*
+   getLaunchIdsByUser(): Returns all booked launches for the logged in user
 
+   */
   async getLaunchIdsByUser() {
     const userId = this.context.user.id;
     const found = await this.store.trips.findAll({
@@ -69,7 +86,10 @@ class UserAPI extends DataSource {
       ? found.map(l => l.dataValues.launchId).filter(l => !!l)
       : [];
   }
+   /*
+   isBookedOnLaunch({ launchId }): Determines whether the logged in user booked a certain launch
 
+   */
   async isBookedOnLaunch({ launchId }) {
     if (!this.context || !this.context.user) return false;
     const userId = this.context.user.id;
