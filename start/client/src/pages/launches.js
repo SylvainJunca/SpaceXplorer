@@ -29,22 +29,7 @@ const GET_LAUNCHES = gql`
 `;
 
 */
-/* 
-Query with the fragment 
-*/
 
-const GET_LAUNCHES = gql`
-  query launchList($after: String) {
-    launches(after: $after) {
-      cursor
-      hasMore
-      launches {
-        ...LaunchTile
-      }
-    }
-  }
-  ${LAUNCH_TILE_DATA}
-`;
 /*
 We define a GraphQL fragment by giving it a name (LaunchTile)
  and defining it on a type on our schema (Launch). The name we give 
@@ -67,6 +52,24 @@ export const LAUNCH_TILE_DATA = gql`
     }
   }
 `;
+
+/* 
+Query with the fragment 
+*/
+
+const GET_LAUNCHES = gql`
+  query launchList($after: String) {
+    launches(after: $after) {
+      cursor
+      hasMore
+      launches {
+        ...LaunchTile
+      }
+    }
+  }
+  ${LAUNCH_TILE_DATA}
+`;
+
 
 export default function Launches() {
   return (
